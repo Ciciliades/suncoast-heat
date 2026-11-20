@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suncoast Heat</title>
+<link rel="stylesheet" href="./css/game.css">
+<link rel="icon" href="data:,">
+<script type="importmap">
+{"imports": {"three": "./vendor/three.module.min.js"}}
+</script>
+</head>
+<body>
+<div id="stage" aria-label="Suncoast Heat game view"></div>
+<div id="hud">
+  <div id="stats">
+    <div id="healthbar"><span id="healthfill"></span></div>
+    <div id="armorbar"><span id="armorfill"></span></div>
+    <div id="cash">$0</div>
+  </div>
+  <div id="stars" aria-label="Wanted level"></div>
+  <div id="objective">Welcome to Suncoast</div>
+</div>
+<canvas id="minimap" width="148" height="148" aria-label="Minimap"></canvas>
+<div id="speed">0</div>
+<div id="ammo"></div>
+<div id="prompt"></div>
+<div id="notify"></div>
+<div id="vignette"></div>
+<div id="dmgdir"></div>
+<div id="titleMenu" class="overlay">
+  <div class="panel">
+    <h1>SUNCOAST HEAT</h1>
+    <p class="tagline">Mara Quinn comes home to Suncoast. The crew remembers her. So do the police.</p>
+    <button id="btnStart" class="menu-btn" type="button">Start new story</button>
+    <button id="btnContinue" class="menu-btn secondary" type="button">Continue</button>
+    <button id="btnTitleSettings" class="menu-btn secondary" type="button">Settings</button>
+    <p class="hint">WASD move &nbsp;·&nbsp; Mouse look &nbsp;·&nbsp; E interact &nbsp;·&nbsp; Esc pause</p>
+    <p class="fine">An original game. All names, places, and brands are fictional.</p>
+  </div>
+</div>
+<div id="pauseMenu" class="overlay">
+  <div class="panel">
+    <h2>Paused</h2>
+    <button id="btnResume" class="menu-btn" type="button">Resume</button>
+    <button id="btnPauseSettings" class="menu-btn secondary" type="button">Settings</button>
+    <button id="btnQuitTitle" class="menu-btn secondary" type="button">Quit to title</button>
+    <p class="hint">WASD move · Shift run · Space jump · E enter / interact · H horn · M map</p>
+  </div>
+</div>
+<div id="settingsMenu" class="overlay">
+  <div class="panel">
+    <h2>Settings</h2>
+    <label class="opt-row">Volume <input id="optVolume" type="range" min="0" max="1" step="0.05"></label>
+    <label class="opt-row">Quality
+      <select id="optQuality">
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </label>
+    <label class="opt-row">Look sensitivity <input id="optSens" type="range" min="0.4" max="2" step="0.1"></label>
+    <button id="btnSettingsBack" class="menu-btn" type="button">Back</button>
+  </div>
+</div>
+<div id="resultsMenu" class="overlay">
+  <div class="panel">
+    <h2 id="resultsTitle">Results</h2>
+    <div id="resultsRows"></div>
+    <button id="btnResultsClose" class="menu-btn" type="button">Back to title</button>
+  </div>
+</div>
+<div id="badge">SUNCOAST HEAT</div>
+<div id="fallback" hidden>Suncoast Heat needs WebGL. Try a current desktop browser.</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
