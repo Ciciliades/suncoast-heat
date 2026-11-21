@@ -1,6 +1,3 @@
-// Wanted system: data-driven heat levels, pursuit/search/cooldown
-// phases, escape logic, and busts. Reads state.wanted; the police
-// pool does the chasing. Siren audio lives in systems/audio.js.
 export const WANTED_LEVELS = {
   1: { cruisers: 1, speed: 26, sight: 40, evade: 6, search: 10, tick: 5, blocks: 0 },
   2: { cruisers: 2, speed: 29, sight: 48, evade: 7, search: 12, tick: 5, blocks: 0 },

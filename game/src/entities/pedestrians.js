@@ -1,6 +1,3 @@
-// Pedestrians: nine archetypes from one builder, each with its own
-// silhouette, colors, speed, and props. They walk sidewalk loops and
-// pause to idle; they flee nearby danger.
 import * as THREE from "three";
 import { mulberry32, pick } from "../core/random.js";
 

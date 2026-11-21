@@ -1,6 +1,3 @@
-// Ambient traffic: pooled vehicles following road loops on the right
-// side of travel, with simple spacing so cars queue instead of
-// overlapping. Cars panic at high wanted levels and report crashes.
 import { Vehicle } from "./vehicles.js";
 import { CAR_PAINTS } from "../config.js";
 

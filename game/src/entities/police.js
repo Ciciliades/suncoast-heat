@@ -1,4 +1,3 @@
-// Bay Police: pooled cruisers, pursuit, search, roadblocks.
 import * as THREE from "three";
 import { Vehicle } from "./vehicles.js";
 import { WANTED_LEVELS } from "../systems/wanted.js";

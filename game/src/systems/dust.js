@@ -1,6 +1,3 @@
-// Tire dust: pooled soft sprites kicked up behind driven wheels on
-// sand. Fills the lower frame in beach shots; costs nothing when the
-// car is on asphalt or parked. Seeded, so replays stay identical.
 import * as THREE from "three";
 
 function dustTexture() {
