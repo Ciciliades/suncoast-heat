@@ -137,9 +137,9 @@ function start() {
     menus.hideAll();
     enterVehicle(pick);
     pick.speed = SHOT === "drive" ? 12 : 18;
-    world.setTimeOfDay(SHOT === "drive" ? 12 : 18.5);
-    state.setWanted(SHOT === "drive" ? 1 : 2);
-    state.setObjective(SHOT === "drive" ? "Drive to the Marina" : "Lose the heat — reach the Marina", 107, 52, true);
+    world.setTimeOfDay(18.5);
+    state.setWanted(SHOT === "drive" ? 3 : 2);
+    state.setObjective("Lose the heat — reach the Marina", 107, 52, true);
     autopilot = { laneZ: SHOT === "chase" ? 97 : 70, target: SHOT === "drive" ? 18 : 26 };
     peds.stageChase(SHOT);
     police.engageStaged(pick);
@@ -148,7 +148,7 @@ function start() {
       camera.pitch = SHOT === "chase2" ? 0.65 : 0.4; yawBias = SHOT === "chase2" ? -0.3 : -0.7; camera.fovFixed = SHOT === "chase2" ? 70 : 68;
       camera.snap();
     }
-    if (SHOT === "drive") { camera.pitch = 0.22; yawBias = -0.2; }
+    if (SHOT === "drive") { state.weapon = "pistol"; camera.distance = 13; camera.pitch = 0.38; camera.fovFixed = 68; yawBias = -0.35; peds.stageChase("chase2"); for (const c of traffic.cars) if (c.loop === city.trafficLoops[0]) { c.dist += c.total / 4; traffic.place(c); } wantedSys.crimeCd = 10; }
   } else if (SHOT === "foot") {
     player.group.position.set(city.shopPos.x, 0, 56);
     player.heading = 0;
@@ -156,12 +156,29 @@ function start() {
     menus.hideAll();
     state.setObjective("Meet Theo at Coral Scoops", city.shopPos.x, city.shopPos.z, true);
     world.setTimeOfDay(17.4);
-    camera.distance = 13;
+    camera.distance = 16;
+    camera.fovFixed = 70;
+    camera.pitch = 0.35;
     playSetup();
-    camera.yaw = player.heading + 2.7;
+    camera.yaw = 3.34;
+    camera.snap();
+    for (const [i, x] of [[1, -24], [5, -18], [9, 2]]) { const q = peds.peds[i]; q.group.position.set(x, 0, 58.8); q.seg = 1; q.dir = 1; q.heading = Math.PI / 2; q.pause = 0; }
   } else if (SHOT === "title") {
-    menus.show("title");
+    player.group.position.set(20, 0, 79);
+    player.heading = 1.57;
+    state.setMode("play");
+    menus.hideAll();
+    state.setObjective("Reach Suncoast Pier", 0, 78, true);
+    state.setWanted(1);
+    state.weapon = "pistol";
+    state.damage(38);
+    combat.gang.members[0].group.position.set(22, 0, 79);
     world.setTimeOfDay(17.4);
+    camera.distance = 7;
+    camera.pitch = 0.22;
+    playSetup();
+    camera.yaw = Math.PI;
+    camera.snap();
   } else {
     menus.show("title");
     world.setTimeOfDay(state.timeOfDay);
