@@ -48,6 +48,62 @@ function start() {
   const camera = new FollowCamera(world.camera);
   camera.distance = 8.5;
   const hud = new Hud();
+  // HUD+ (display only): mission banner, clock, respect. Built here so the
+  // only changed file stays main.js; reads state, writes no game logic.
+  const PANEL = "position:fixed;z-index:8;pointer-events:none;background:rgba(10,18,32,.85);border:1px solid rgba(255,247,232,.28);border-radius:12px;color:#fff7e8;font-family:system-ui,sans-serif;";
+  function hudBox(css) { const d = document.createElement("div"); d.style.cssText = PANEL + css; d.style.display = "none"; document.body.appendChild(d); return d; }
+  function hudLine(parent, css) { const d = document.createElement("div"); d.style.cssText = css; parent.appendChild(d); return d; }
+  const banner = hudBox("top:14px;left:50%;transform:translateX(-50%);padding:10px 20px;text-align:center;max-width:620px;");
+  const bTitle = hudLine(banner, "font-weight:800;font-size:17px;letter-spacing:2px;color:#ffc857;");
+  const bObj = hudLine(banner, "font-weight:600;font-size:15px;margin-top:3px;");
+  const bSub = hudLine(banner, "font-size:12px;opacity:.85;margin-top:3px;letter-spacing:1px;");
+  const clockEl = hudBox("top:48px;right:18px;padding:8px 12px;font-weight:800;font-size:15px;letter-spacing:1px;");
+  const respectEl = hudBox("top:96px;right:18px;padding:8px 12px;");
+  const rMain = hudLine(respectEl, "font-weight:800;font-size:14px;letter-spacing:1px;");
+  const rSub = hudLine(respectEl, "font-size:12px;opacity:.85;margin-top:2px;");
+  const RANKS = ["ROOKIE", "HUSTLER", "RUNNER", "ENFORCER", "BOSS", "KINGPIN"];
+  const XP_NEXT = [100, 250, 450, 700, 1000, 1400, 1900, 2500, 3200];
+  function missionInfo(text) {
+    if (text.includes("Meet Theo")) return { n: 1, title: "HOMECOMING" };
+    if (text.includes("sports car")) return { n: 2, title: "THE KROLL JOB" };
+    if (text.includes("Suncoast Pier")) return { n: 3, title: "HEAT ON THE BOULEVARD" };
+    if (text.includes("Marina")) return { n: 2, title: "THE KROLL JOB" };
+    if (text.includes("Deliver the parcel")) return { n: 0, title: "COURIER JOB" };
+    if (text.includes("Suncoast is yours") || text.includes("Welcome to Suncoast")) return null;
+    return state.objective.hasTarget ? { n: 0, title: "MISSION" } : null;
+  }
+  const oldObjective = document.getElementById("objective");
+  const hudCache = {};
+  function setText(elm, key, value) { if (hudCache[key] !== value) { hudCache[key] = value; elm.textContent = value; } }
+  function updateMissionHud() {
+    const show = state.mode === "play" || state.mode === "dialogue";
+    const info = show ? missionInfo(state.objective.text) : null;
+    banner.style.display = info ? "block" : "none";
+    if (oldObjective) oldObjective.style.display = info ? "none" : "";
+    clockEl.style.display = show ? "block" : "none";
+    respectEl.style.display = show ? "block" : "none";
+    if (!show) return;
+    const h = Math.floor(state.timeOfDay);
+    let m = Math.round((state.timeOfDay - h) * 60);
+    const hh = m === 60 ? h + 1 : h; if (m === 60) m = 0;
+    setText(clockEl, "clock", `DAY 1  ·  ${String(hh).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+    const lv = state.level;
+    const next = XP_NEXT[lv - 1] || XP_NEXT[XP_NEXT.length - 1];
+    setText(rMain, "rMain", `RESPECT  ·  LV ${lv} ${RANKS[Math.min(lv - 1, RANKS.length - 1)]}`);
+    setText(rSub, "rSub", `XP ${state.xp} / ${next}`);
+    if (!info) return;
+    setText(bTitle, "bTitle", info.n ? `MISSION ${info.n}/3  ·  ${info.title}` : info.title);
+    setText(bObj, "bObj", state.objective.text);
+    let sub = "";
+    const tm = state.objective.text.match(/(\d+)s/);
+    if (tm) sub = `TIME LEFT ${tm[1]}s  ·  PLAZA DEL SOL`;
+    else if (state.objective.hasTarget) {
+      const d = Math.round(Math.hypot(focus.x - state.objective.x, focus.z - state.objective.z));
+      sub = `CHECKPOINT  ·  ${d}m AWAY`;
+    }
+    setText(bSub, "bSub", sub);
+    bSub.style.display = sub ? "block" : "none";
+  }
   const focus = new Vector3(0, 0, 70);
   const city = buildCity(world.scene);
   const minimap = new Minimap(document.getElementById("minimap"), city.roadSegments);
@@ -292,6 +348,7 @@ function start() {
         minimap.draw(focus.x, focus.z, heading, wp, animT, marks);
       }
       hud.update(state, step);
+      updateMissionHud();
       input.endFrame();
     },
     render: () => {
